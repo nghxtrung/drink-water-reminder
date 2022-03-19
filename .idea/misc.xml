@@ -4,7 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder.xml" value="0.264" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_manually_reminder_setting.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder.xml" value="0.536" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder_interval.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder_startand_end.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_update_reminder_setting.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/custom_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/dialog_add_clock.xml" value="0.264" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/item_clock_row.xml" value="0.4" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/optionmenu_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/option_menu_clock.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/optionmenu_item.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
