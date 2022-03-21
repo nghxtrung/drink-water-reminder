@@ -7,7 +7,7 @@
     tools:context=".ReminderActivity">
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/relativeLayoutNoti"
         android:layout_width="414dp"
         android:layout_height="208dp"
         android:background="#90EE90"
@@ -38,47 +38,49 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:id="@+id/buttonOffnoti"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_margin="20dp"
-                android:backgroundTint="#32CD32"
-                android:contentDescription="@string/app_name"
+                android:backgroundTint="#A0A0A0"
                 app:cornerRadius="28dp"
                 app:icon="@drawable/offnoti" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:id="@+id/buttonNotinote"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_margin="20dp"
-                android:backgroundTint="#32CD32"
-                android:contentDescription="@string/app_name"
+                android:backgroundTint="#A0A0A0"
                 app:cornerRadius="28dp"
                 app:icon="@drawable/notinote" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:id="@+id/buttonOffSound"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_margin="20dp"
-                android:backgroundTint="#32CD32"
+                android:backgroundTint="#A0A0A0"
                 android:text="3"
                 app:cornerRadius="28dp"
                 app:icon="@drawable/offsound" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:id="@+id/buttonNoti"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_margin="20dp"
-                android:backgroundTint="#32CD32"
-                android:contentDescription="@string/app_name"
+                android:backgroundTint="#A0A0A0"
                 app:cornerRadius="28dp"
                 app:icon="@drawable/noti" />
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/content"
         android:layout_width="408dp"
         android:layout_height="517dp"
         android:layout_marginStart="1dp"
@@ -88,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutNoti">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -192,6 +194,7 @@
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/layout_reminder_sound"
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:orientation="horizontal">
@@ -215,6 +218,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linnerLayoutCustomSound"
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:orientation="horizontal">
@@ -229,12 +233,12 @@
 
             <TextView
                 android:id="@+id/textView10"
-                android:layout_width="36dp"
+                android:layout_width="100px"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="600px"
                 android:text="Short"
                 android:textColor="#32CD32"
-                android:textSize="15dp" />
+                android:textSize="10dp" />
         </LinearLayout>
 
         <LinearLayout

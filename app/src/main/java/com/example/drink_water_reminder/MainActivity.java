@@ -12,13 +12,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button buttonNextPage = findViewById(R.id.buttonNextPage);
-        buttonNextPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,ReminderActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

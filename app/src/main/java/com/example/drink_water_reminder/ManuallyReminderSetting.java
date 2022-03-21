@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,21 @@ public class ManuallyReminderSetting extends AppCompatActivity {
                 showDialog();
             }
         });
+        FloatingActionButton floatingActionButtonBack = findViewById(R.id.floatingActionButtonBack);
+        floatingActionButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String listStringTime = "";
+                for (int i = 0; i < listClock.size(); i++) {
+                    listStringTime += listClock.get(i).getHour() +":" + listClock.get(i).getMinute();
+                    listStringTime += ",";
+                }
+                Intent i = new Intent(ManuallyReminderSetting.this,ReminderActivity.class);
+                i.putExtra("timeString",listStringTime);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void showDialog(){
