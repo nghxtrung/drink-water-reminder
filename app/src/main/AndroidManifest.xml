@@ -10,6 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Drinkwaterreminder">
         <activity
+            android:name=".GenaralActivity"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity"
+            android:label="Genaral"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:label="Settings"/>
+        <activity
+            android:name=".DrinkLogActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:label="Drink log"
+            />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

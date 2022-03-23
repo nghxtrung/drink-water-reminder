@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.17708333333333334" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_drink_log.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_genaral.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_main.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_settings.xml" value="0.22" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/list_item_setting.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_drinklog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_genaral.xml" value="0.1875" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_setting.xml" value="0.18802083333333333" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
