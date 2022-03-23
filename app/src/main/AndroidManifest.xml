@@ -10,8 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Drinkwaterreminder">
         <activity
-            android:name=".ReportActivity"
+            android:name=".ReportWeightActivity"
             android:exported="true" />
+        <activity
+            android:name=".TabActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

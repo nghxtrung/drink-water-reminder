@@ -28,7 +28,8 @@ import java.util.ArrayList;
 
 public class ReportActivity extends AppCompatActivity {
 
-    private PieChart pieChart;
+    private PieChart pieChartToday;
+    private PieChart pieChartWeek;
 
     LineChart lineChart;
 
@@ -69,7 +70,8 @@ public class ReportActivity extends AppCompatActivity {
         lineDataSet.setValueTextColor(Color.BLACK);
 
 
-        pieChart = findViewById(R.id.pieChart);
+        pieChartToday = findViewById(R.id.pieChartToDay);
+        pieChartWeek = findViewById(R.id.pieChartWeek);
         setupPieChart();
         loadPieChartData();
 
@@ -78,17 +80,27 @@ public class ReportActivity extends AppCompatActivity {
 
 
     private void setupPieChart() {
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setUsePercentValues(true);
-        pieChart.setEntryLabelColor(Color.BLACK);
-        pieChart.getDescription().setEnabled(false);
+        pieChartToday.setDrawHoleEnabled(true);
+        pieChartToday.setUsePercentValues(true);
+        pieChartToday.setEntryLabelColor(Color.BLACK);
+        pieChartToday.getDescription().setEnabled(false);
+        pieChartWeek.setDrawHoleEnabled(true);
+        pieChartWeek.setUsePercentValues(true);
+        pieChartWeek.setEntryLabelColor(Color.BLACK);
+        pieChartWeek.getDescription().setEnabled(false);
 
-        Legend l = pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
-        l.setEnabled(true);
+        Legend lt = pieChartToday.getLegend();
+        Legend lw = pieChartWeek.getLegend();
+        lt.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        lt.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        lt.setOrientation(Legend.LegendOrientation.VERTICAL);
+        lt.setDrawInside(false);
+        lt.setEnabled(true);
+        lw.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        lw.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        lw.setOrientation(Legend.LegendOrientation.VERTICAL);
+        lw.setDrawInside(false);
+        lw.setEnabled(true);
     }
 
     private void loadPieChartData() {
@@ -111,13 +123,18 @@ public class ReportActivity extends AppCompatActivity {
         PieData data = new PieData(dataSet);
         data.setDrawValues(true);
         data.setValueTextSize(0.1f);
-        data.setValueFormatter(new PercentFormatter(pieChart));
+        data.setValueFormatter(new PercentFormatter(pieChartToday));
+        data.setValueFormatter(new PercentFormatter(pieChartWeek));
         data.setValueTextColor(Color.BLACK);
 
-        pieChart.setData(data);
-        pieChart.invalidate();
+        pieChartToday.setData(data);
+        pieChartToday.invalidate();
 
-        pieChart.animateY(1400, Easing.EaseInOutQuad);
+        pieChartToday.animateY(1400, Easing.EaseInOutQuad);
+        pieChartWeek.setData(data);
+        pieChartWeek.invalidate();
+
+        pieChartWeek.animateY(1400, Easing.EaseInOutQuad);
     }
 
 
