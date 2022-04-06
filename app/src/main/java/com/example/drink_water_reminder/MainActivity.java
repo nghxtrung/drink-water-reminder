@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -497,7 +498,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.reminder:
-                Toast.makeText(this, "remider", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this,ReminderActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.weight:
                 return true;
