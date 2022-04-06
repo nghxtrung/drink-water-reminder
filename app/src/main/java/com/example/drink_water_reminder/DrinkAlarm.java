@@ -40,7 +40,7 @@ public class DrinkAlarm implements Comparable<DrinkAlarm> {
 
     @Override
     public int compareTo(DrinkAlarm drinkAlarm) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         int value = 0;
         try {
             value = simpleDateFormat.parse(this.time).compareTo(simpleDateFormat.parse(drinkAlarm.time));

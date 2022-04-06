@@ -312,12 +312,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showTimeItemAlert(TextView drinkTimeDetailTextView) {
         String drinkTimeDetail = drinkTimeDetailTextView.getText().toString();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         try {
             Date date = simpleDateFormat.parse(drinkTimeDetail);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            hourDrinkDetail = calendar.get(Calendar.HOUR_OF_DAY) == 0 ? 12 : calendar.get(Calendar.HOUR_OF_DAY);
+            hourDrinkDetail = calendar.get(Calendar.HOUR_OF_DAY);
             minuteDrinkDetail = calendar.get(Calendar.MINUTE);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Calendar calendar = Calendar.getInstance();
                 int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
                 int minuteNow = calendar.get(Calendar.MINUTE);
-                if (selectedHour > hourNow || (selectedHour <= hourNow && selectedMinute > minuteNow)) {
+                if (selectedHour > hourNow || (selectedHour == hourNow && selectedMinute > minuteNow)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Thông báo")
                             .setMessage("Vui lòng chọn thời gian nhỏ hơn")
