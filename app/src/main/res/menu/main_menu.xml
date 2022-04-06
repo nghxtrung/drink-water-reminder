@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="Reminder"
+        android:id="@+id/reminder"
+        android:icon="@drawable/ic_bell"
+        app:showAsAction="always" />
+    <item
+        android:title="Today"
+        android:id="@+id/today"/>
+    <item
+        android:title="Yesterday"
+        android:id="@+id/yesterday"/>
+    <item
+        android:title="Custom date"
+        android:id="@+id/customDate"/>
+    <item
+        android:title="Weight"
+        android:id="@+id/weight"
+        android:icon="@drawable/ic_weight"
+        app:showAsAction="always" />
+</menu>
