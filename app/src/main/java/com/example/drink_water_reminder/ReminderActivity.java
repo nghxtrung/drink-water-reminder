@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -29,7 +31,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ReminderActivity extends AppCompatActivity {
 
@@ -43,128 +48,18 @@ public class ReminderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reminder);
         timeEvery = findViewById(R.id.textView4);
         timeStartEnd = findViewById(R.id.textViewStartandEnd);
-        if(getIntent().hasExtra("time")){
-            String timeEvertuRemider = getIntent().getStringExtra("time");
-            timeEvery.setText(timeEvertuRemider);
-        }
-        else{
-            timeEvery.setText("Every 30 minutes");
-        }
-        if(getIntent().hasExtra("startEnd")){
-            String timeStartEndRemider = getIntent().getStringExtra("startEnd");
-            timeStartEnd.setText(timeStartEndRemider);
-        }
-        else{
-            timeStartEnd.setText("10:00-21:00");
-        }
-
-
-
-        LinearLayout linearLayout = findViewById(R.id.lineManually);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomDialogClass cdd=new CustomDialogClass(ReminderActivity.this);
-                cdd.show();
-                cdd.yes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TextView text = findViewById(R.id.textView5);
-                        if(text.getText().equals("MANUALLY SET REMINDERS")){
-                            View buttonShowManually = findViewById(R.id.buttonManuallySetting);
-                            buttonShowManually.setVisibility(View.VISIBLE);
-                            View buttonShow = findViewById(R.id.btnShow);
-                            text.setText("Auto Remider");
-                            buttonShow.setVisibility(View.GONE);
-                            if(text.getText().equals("Auto Remider")){
-                                if(getIntent().hasExtra("timeString")){
-                                    String timeString = getIntent().getStringExtra("timeString");
-                                    timeStartEnd.setText(timeString);
-                                    timeEvery.setVisibility(View.GONE);
-                                }
-                            }else if(text.getText().equals("MANUALLY SET REMINDERS")){
-                                timeStartEnd.setText("10:00-21:00");
-                                timeEvery.setVisibility(View.VISIBLE);
-                            }
-                            cdd.dismiss();
-                        }else if(text.getText().equals("Auto Remider")) {
-                            View buttonShowManually = findViewById(R.id.buttonManuallySetting);
-                            buttonShowManually.setVisibility(View.GONE);
-                            View buttonShow = findViewById(R.id.btnShow);
-                            buttonShow.setVisibility(View.VISIBLE);
-                            text.setText("MANUALLY SET REMINDERS");
-                            if(text.getText().equals("Auto Remider")){
-                                if(getIntent().hasExtra("timeString")){
-                                    String timeString = getIntent().getStringExtra("timeString");
-                                    timeStartEnd.setText(timeString);
-                                    timeEvery.setVisibility(View.GONE);
-                                }
-                            }else if(text.getText().equals("MANUALLY SET REMINDERS")){
-                                timeStartEnd.setText("10:00-21:00");
-                                timeEvery.setVisibility(View.VISIBLE);
-                            }
-                            cdd.dismiss();
-                        }
-                    }
-                });
-            }
-        });
-
-    Button buttonSettingManully = findViewById(R.id.buttonManuallySetting);
-    buttonSettingManully.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent i = new Intent(ReminderActivity.this,ManuallyReminderSetting.class);
-            startActivity(i);
-        }
-    });
+        timeStartEnd.setText(TestDB.timeStart + "-" + TestDB.timeEnd);
     TextView textViewTitle = findViewById(R.id.textViewReminder);
     RelativeLayout relativeLayoutNoti = findViewById(R.id.relativeLayoutNoti);
-    Button buttonOffNote = findViewById(R.id.buttonOffnoti);
-    Button buttonNotiNote = findViewById(R.id.buttonNotinote);
-    Button buttonOffSound = findViewById(R.id.buttonOffSound);
-    Button buttonNoti = findViewById(R.id.buttonNoti);
+    ImageView buttonOffNote = findViewById(R.id.buttonOffnoti);
+    ImageView buttonNoti = findViewById(R.id.buttonNoti);
     LinearLayout linearLayoutContent = findViewById(R.id.content);
-    buttonNoti.setBackgroundColor(Color.parseColor("#ECECEC"));
     buttonOffNote.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
            textViewTitle.setText("Reminder is turned off");
-           relativeLayoutNoti.setBackgroundColor(Color.parseColor("#E54646"));
-           buttonOffNote.setBackgroundColor(Color.parseColor("#ECECEC"));
-           buttonNotiNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-           buttonOffSound.setBackgroundColor(Color.parseColor("#A0A0A0"));
-           buttonNoti.setBackgroundColor(Color.parseColor("#A0A0A0"));
+           relativeLayoutNoti.setBackgroundColor(Color.parseColor("#EE5C49"));
            linearLayoutContent.setVisibility(View.GONE);
-        }
-    });
-
-
-    buttonNotiNote.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            textViewTitle.setText("No Reminders when you are ahead of schedule");
-            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#EC870E"));
-            buttonOffNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonNotiNote.setBackgroundColor(Color.parseColor("#ECECEC"));
-            buttonOffSound.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonNoti.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            linearLayoutContent.setVisibility(View.VISIBLE);
-
-        }
-    });
-
-
-    buttonOffSound.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            textViewTitle.setText("Mute when you are ahead of schedule");
-            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#EB7153"));
-            buttonOffNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonNotiNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonOffSound.setBackgroundColor(Color.parseColor("#ECECEC"));
-            buttonNoti.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            linearLayoutContent.setVisibility(View.VISIBLE);
         }
     });
 
@@ -173,11 +68,7 @@ public class ReminderActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             textViewTitle.setText("Auto Reminders");
-            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#83C75D"));
-            buttonOffNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonNotiNote.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonOffSound.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            buttonNoti.setBackgroundColor(Color.parseColor("#ECECEC"));
+            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#51d06d"));
             linearLayoutContent.setVisibility(View.VISIBLE);
         }
     });
@@ -189,29 +80,12 @@ public class ReminderActivity extends AppCompatActivity {
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ReminderActivity.this);
             LayoutInflater inflater = getLayoutInflater();
-            view  = inflater.inflate(R.layout.layout_progressbar_custom,null);
+            view = inflater.inflate(R.layout.volume_alert,null);
             builder.setView(view);
-            Dialog dialog = builder.create();
-            dialog.show();
-            ProgressBar progressBar = dialog.findViewById(R.id.progressbarPredict);
-            progressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int current = progressBar.getProgress();
-                    if(current > progressBar.getMax()){
-                        current = 0;
-                    }
-                    progressBar.setProgress(current+10);
-                    textViewSound.setText(current+"");
-                }
-            });
-            Button buttonProgressCancle = dialog.findViewById(R.id.buttonProgressCancle);
-            buttonProgressCancle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setTitle("Reminder volume")
+                    .setPositiveButton("OK", null)
+                    .setNegativeButton("Cancel", null)
+                    .show();
         }
     });
 
@@ -266,9 +140,6 @@ public class ReminderActivity extends AppCompatActivity {
             }
         }
     });
-
-
-
     }
 
     public void showPopup(View v) {
@@ -282,8 +153,7 @@ public class ReminderActivity extends AppCompatActivity {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(ReminderActivity.this,ReminderIntervalActivity.class);
-                startActivity(intent);
+                showIntervalAlert(true, "");
                 return true;
             }
         });
@@ -296,16 +166,57 @@ public class ReminderActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
+    private void showIntervalAlert(boolean checkError, String error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ReminderActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View intervalTimeAlertView = inflater.inflate(R.layout.interval_alert, null);
+        builder.setView(intervalTimeAlertView);
+        EditText intervalTimeEditText = intervalTimeAlertView.findViewById(R.id.intervalTimeEditText);
+        if (!checkError) {
+            intervalTimeEditText.setError(error);
+            intervalTimeEditText.requestFocus();
+        }
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (validateIntervalTime(intervalTimeEditText).equals("")) {
+                    timeEvery.setText("Every " + intervalTimeEditText.getText().toString() + " minutes");
+                } else {
+                    String error = validateIntervalTime(intervalTimeEditText);
+                    showIntervalAlert(false, error);
+                }
+            }
+        })
+        .setNegativeButton("Cancel", null);
+        builder.show();
+    }
 
-
-
-
-
-
-
+    private String validateIntervalTime(EditText editText) {
+        try {
+            int value = Integer.parseInt(editText.getText().toString());
+            if (value <= 0)
+                return "Bắt buộc lớn 0";
+            else {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                try {
+                    Date dateStart = simpleDateFormat.parse(TestDB.timeStart);
+                    Date dateEnd = simpleDateFormat.parse(TestDB.timeEnd);
+                    long diffMs = dateEnd.getTime() - dateStart.getTime();
+                    long diffSec = diffMs / 1000;
+                    long min = diffSec / 60;
+                    if (value > min)
+                        return "Bắt buộc nhỏ hơn";
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "";
+        } catch (NumberFormatException e) {
+            return "Bắt buộc nhập số";
+        }
+    }
 }
 
 

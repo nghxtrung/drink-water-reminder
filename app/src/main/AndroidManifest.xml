@@ -16,9 +16,6 @@
             android:name=".ReminderStartandEnd"
             android:parentActivityName=".ReminderActivity" />
         <activity
-            android:name=".ReminderIntervalActivity"
-            android:parentActivityName=".ReminderActivity" />
-        <activity
             android:name=".ReminderActivity"
             android:parentActivityName=".MainActivity" />
         <activity

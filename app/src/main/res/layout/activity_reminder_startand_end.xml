@@ -6,73 +6,91 @@
     android:layout_height="match_parent"
     tools:context=".ReminderStartandEnd">
 
-    <LinearLayout
-        android:layout_width="357dp"
-        android:layout_height="269dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="153dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="226dp"
+        android:text="Set Reminder"
+        android:textSize="18dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:text="Set Reminder" />
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="24dp"
+        android:textSize="15dp"
+        android:text="End"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/buttonOk"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:layout_constraintVertical_bias="1.0" />
 
-        <LinearLayout
-            android:layout_width="399dp"
-            android:layout_height="64dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="47dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:textSize="15dp"
+        android:text="Start"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="144dp"
-                android:layout_height="40dp"
-                android:text="Start" />
+    <EditText
+        android:id="@+id/editTextEnd"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="249dp"
+        android:editable="false"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="21:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextStart" />
 
-            <EditText
-                android:id="@+id/editTextStart"
-                android:layout_width="221dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="9:00" />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/editTextStart"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="250dp"
+        android:editable="false"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="09:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
-        <LinearLayout
-            android:layout_width="399dp"
-            android:layout_height="64dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+    <Button
+        android:id="@+id/buttonOk"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="251dp"
+        android:layout_marginBottom="387dp"
+        android:backgroundTint="#32CD32"
+        android:text="Ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEnd" />
 
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="144dp"
-                android:layout_height="40dp"
-                android:text="End" />
-
-            <EditText
-                android:id="@+id/editTextEnd"
-                android:layout_width="221dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="21:00" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonOk"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#32CD32"
-            android:text="Ok"
-            />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
