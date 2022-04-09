@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
     public void doClick(View v){
-        Intent intent = new Intent(this,SettingsActivity.class);
+        Intent intent = new Intent(this,DrinkLogActivity.class);
         startActivity(intent);
     }
 }
