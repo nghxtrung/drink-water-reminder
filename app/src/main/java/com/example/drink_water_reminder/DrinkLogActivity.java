@@ -30,9 +30,6 @@ public class DrinkLogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drink_log);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//action return to menu toolbar
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.title_toolbar)));
-
         drinkLogList.add(new DrinkLog(R.drawable.water, 300, "12:00"));
         drinkLogList.add(new DrinkLog(R.drawable.water, 400, "12:00"));
         drinkLogList.add(new DrinkLog(R.drawable.water, 500, "12:00"));

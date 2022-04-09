@@ -42,9 +42,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
-    DrawerLayout drawer;
     DrinkAdapter drinkAdapter;
     GridView drinkGridView;
     TextView drinkTargetTextView;
@@ -79,23 +78,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar mainToolBar = findViewById(R.id.mainToolbar);
         setSupportActionBar(mainToolBar);
-        getSupportActionBar().setTitle("Menu");
-        mainToolBar.setNavigationIcon(R.drawable.ic_menu);
+        getSupportActionBar().setTitle("Drink Water Reminder");
+        mainToolBar.setNavigationIcon(R.drawable.ic_bell);
         mainToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "menu", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this,ReminderActivity.class);
+                startActivity(intent);
             }
         });
         mainToolBar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_calendar));
-
-        drawer = findViewById(R.id.drawerLayout);
-        NavigationView navigationView = findViewById(R.id.navigationHeader);
-        navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mainToolBar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
 
         List<DrinkAlarm> drinkAlarmList = new ArrayList<DrinkAlarm>();
         drinkAlarmList.add(new DrinkAlarm(R.drawable.ic_bottle_1, 300, "12:00"));
@@ -497,11 +489,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.reminder:
-                Intent intent = new Intent(MainActivity.this,ReminderActivity.class);
+            case R.id.drinkLog:
+                Intent intent = new Intent(MainActivity.this, DrinkLogActivity.class);
                 startActivity(intent);
-                return true;
-            case R.id.weight:
                 return true;
             case R.id.today:
                 getSupportActionBar().setTitle("Menu");
@@ -515,31 +505,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.drinkMain:
-                Toast.makeText(this, "drink main", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.drinkLog:
-                Toast.makeText(this, "drink log", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.drinkReport:
-                Toast.makeText(this, "drink report", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.weightReport:
-                Toast.makeText(this, "weight report", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.reminder2:
-                Toast.makeText(this, "remider2", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.setting:
-                Toast.makeText(this, "setting", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

@@ -3,37 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/drawable/circle_background.xml" value="0.2265" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/drawable/ic_bell.xml" value="0.2265" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/drawable/ic_bell_green.xml" value="0.2265" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/drawable/rounded_background.xml" value="0.2265" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_manually_reminder_setting.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder.xml" value="0.264" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder_interval.xml" value="0.536" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_reminder_startand_end.xml" value="0.4" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/activity_update_reminder_setting.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/alert_welcome.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/custom_dialog.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/dialog_add_clock.xml" value="0.264" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/dialog_custom_sound.xml" value="0.1" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/drink_alarm_item.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/drink_detail_alert.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/drink_item_image.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/interval_alert.xml" value="0.264" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/item_clock_row.xml" value="0.4" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/layout_progressbar_custom.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/list_drink_now_alert.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/navigation_header.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/optionmenu_item.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/update_weight_alert.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/layout/volume_alert.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/option_menu_clock.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/menu/optionmenu_item.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2265" />
-        <entry key="..\:/Users/Laptop/Desktop/drink-water-reminder/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2265" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_drink_log.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_genaral.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_main.xml" value="0.22592592592592592" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_manually_reminder_setting.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_reminder.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/activity_update_reminder_setting.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/dialog_add_clock.xml" value="0.25416666666666665" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/listview_drinklog.xml" value="0.2" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/layout/listview_itemdrinklog.xml" value="0.4" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/menu/drawer_menu.xml" value="0.25025641025641027" />
+        <entry key="..\:/Programming/Android/Bai tap lon/drink-water-reminder/app/src/main/res/menu/main_menu.xml" value="0.25025641025641027" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.17708333333333334" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_drink_log.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_genaral.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_main.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/activity_settings.xml" value="0.22" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/list_item_setting.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_drinklog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_genaral.xml" value="0.1875" />
+        <entry key="..\:/Users/nguye/OneDrive/Documents/KI_2_NAM_2/BTLANDROI/drink-water-reminder/app/src/main/res/layout/listview_setting.xml" value="0.18802083333333333" />
       </map>
     </option>
   </component>
