@@ -19,6 +19,9 @@
             android:name=".ReminderActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".DrinkLogActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
