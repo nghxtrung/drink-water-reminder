@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -81,6 +82,31 @@ public class ReminderActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(ReminderActivity.this);
             LayoutInflater inflater = getLayoutInflater();
             view = inflater.inflate(R.layout.volume_alert,null);
+            SeekBar seekBar = view.findViewById(R.id.seekBarVolumn);
+            seekBar.setProgress(0);
+            seekBar.incrementProgressBy(10);
+            seekBar.setMax(100);
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    progress = progress / 10;
+                    progress = progress * 10;
+                    textViewSound.setText(String.valueOf(progress));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
             builder.setView(view);
             builder.setTitle("Reminder volume")
                     .setPositiveButton("OK", null)
