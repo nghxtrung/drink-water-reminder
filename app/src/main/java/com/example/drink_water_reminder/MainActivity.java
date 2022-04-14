@@ -1,21 +1,29 @@
 package com.example.drink_water_reminder;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,8 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.google.android.material.navigation.NavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,10 +63,63 @@ public class MainActivity extends AppCompatActivity {
     DrinkItemAddAdapter drinkItemAddAdapter;
     List<DrinkNow> drinkNowList;
 
+    public void setWaterReminderNotification(int idWaterReminderNotification, String drinkTimeString) {
+        Intent wrnIntent = new Intent(MainActivity.this, WaterReminderNotificationReceiver.class);
+        PendingIntent wrnPendingIntent = PendingIntent.getBroadcast(MainActivity.this, idWaterReminderNotification, wrnIntent, PendingIntent.FLAG_MUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dateNowString = dateFormat.format(dateNow);
+        String drinkDateTimeString = drinkTimeString + ":01 " + dateNowString;
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        Date drinkDateTime = null;
+        try {
+            drinkDateTime = dateTimeFormat.parse(drinkDateTimeString);
+            long drinkMillis = drinkDateTime.getTime();
+            alarmManager.set(AlarmManager.RTC_WAKEUP, drinkMillis, wrnPendingIntent);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsetWaterReminderNotification(int idWaterReminderNotification) {
+        Intent wrnIntent = new Intent(MainActivity.this, WaterReminderNotificationReceiver.class);
+        PendingIntent wrnPendingIntent = PendingIntent.getBroadcast(MainActivity.this, idWaterReminderNotification, wrnIntent, PendingIntent.FLAG_MUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(wrnPendingIntent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("waterReminder", "Water Reminder Channel", NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        Date dateNow = new Date();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        String timNowString = timeFormat.format(dateNow);
+        List<DrinkAlarmTest> drinkAlarmTestList = new ArrayList<DrinkAlarmTest>();
+        drinkAlarmTestList.add(new DrinkAlarmTest(1, "22:01"));
+        drinkAlarmTestList.add(new DrinkAlarmTest(2, "22:02"));
+        drinkAlarmTestList.add(new DrinkAlarmTest(3, "22:03"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        int value = 0;
+        try {
+            for (DrinkAlarmTest drinkAlarmTest : drinkAlarmTestList) {
+                value = simpleDateFormat.parse(drinkAlarmTest.getTime()).compareTo(simpleDateFormat.parse(timNowString));
+                if (value >= 1)
+                    setWaterReminderNotification(drinkAlarmTest.getId(), drinkAlarmTest.getTime());
+                else
+                    unsetWaterReminderNotification(drinkAlarmTest.getId());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                 .setTitle("Done")
@@ -89,10 +148,7 @@ public class MainActivity extends AppCompatActivity {
         });
         mainToolBar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_calendar));
 
-        List<DrinkAlarm> drinkAlarmList = new ArrayList<DrinkAlarm>();
-        drinkAlarmList.add(new DrinkAlarm(R.drawable.ic_bottle_1, 300, "12:00"));
-        drinkAlarmList.add(new DrinkAlarm(R.drawable.ic_bottle_1, 300, "13:00"));
-        drinkAlarmList.add(new DrinkAlarm(R.drawable.ic_bell_color, 0, "14:00"));
+        List<DrinkAlarm> drinkAlarmList = TestDatabase.getData();
 
         drinkProgressBar = findViewById(R.id.drinkTargetProgressBar);
         drinkTargetTextView = findViewById(R.id.drinkTargetTextView);
@@ -105,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         drinkGridView = findViewById(R.id.drinkGridView);
+        Collections.sort(drinkAlarmList);
         drinkAdapter = new DrinkAdapter(this, drinkAlarmList);
         drinkGridView.setAdapter(drinkAdapter);
         drinkGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

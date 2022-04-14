@@ -22,7 +22,7 @@ import java.util.List;
 
 public class DrinkLogActivity extends AppCompatActivity {
     ListView listViewDrinkLog;
-    String date[] = {"09-04-2022", "10-04-2022"};
+    String date[] = {"09-04-2022", "10-04-2022", "11-04-2022"};
     List<DrinkLog> drinkLogList = new ArrayList<DrinkLog>();
 
     @Override
@@ -54,7 +54,7 @@ public class DrinkLogActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return date.length;
         }
 
         @Override
@@ -128,7 +128,7 @@ public class DrinkLogActivity extends AppCompatActivity {
 
                 drinkLogItemImageView.setImageResource(drinkLogList.get(i).getImage());
                 drinkLogItemVolumeTextView.setText(drinkLogList.get(i).getVolume() + " ml");
-                drinkLogItemTimeTextView.setText(drinkLogList.get(i).getTime());
+                drinkLogItemTimeTextView.setText("12:00");
             }
             return v;
         }
