@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -24,13 +26,21 @@ import java.util.Date;
 public class ReminderStartandEnd extends AppCompatActivity {
 
     int hourEnd, minuteEnd,hourStart,minuteStart;
+    EditText editTextStart;
+    EditText editTextEnd;
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static  final String TIME_START = "timestart";
+    public static  final String TIME_END = "timeend";
+    private  String timeStart1,timeEnd1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_startand_end);
-        EditText editTextStart = findViewById(R.id.editTextStart);
-        EditText editTextEnd = findViewById(R.id.editTextEnd);
+        editTextStart = findViewById(R.id.editTextStart);
+        editTextEnd = findViewById(R.id.editTextEnd);
         editTextStart.setInputType(InputType.TYPE_NULL);
         editTextStart.setText(TestDB.timeStart);
         editTextEnd.setText(TestDB.timeEnd);
@@ -55,6 +65,10 @@ public class ReminderStartandEnd extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        loadDataStart();
+        loadDataEnd();
+        updateStart();
+        updateEnd();
     }
 
     private void showTimeStartAlert(EditText editTextStart, EditText editTextEnd) {
@@ -90,7 +104,7 @@ public class ReminderStartandEnd extends AppCompatActivity {
                     String minute = i1 < 10 ? ("0" + i1) : Integer.toString(i1);
                     calendar.set(0,0,0,i,i1);
                     editTextStart.setText(hour + ":" + minute);
-                    TestDB.timeStart = hour + ":" + minute;
+                    saveDataTimeStart();
                 }
             }
         },gio,phut,true);
@@ -130,10 +144,39 @@ public class ReminderStartandEnd extends AppCompatActivity {
                     String minute = i1 < 10 ? ("0" + i1) : Integer.toString(i1);
                     calendar.set(0,0,0,i,i1);
                     editTextEnd.setText(hour + ":" + minute);
-                    TestDB.timeEnd = hour + ":" + minute;
+                    saveDataTimeEnd();
                 }
             }
         },gio,phut,true);
         timePickerDialog.show();
     }
+    public void saveDataTimeStart(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sharedPreferences.edit();
+        editor.putString(TIME_START,editTextStart.getText().toString());
+        editor.commit();
+        Toast.makeText(this,"Data saved",Toast.LENGTH_SHORT).show();
+    }
+    public void saveDataTimeEnd(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sharedPreferences.edit();
+        editor.putString(TIME_END,editTextEnd.getText().toString());
+        editor.commit();
+        Toast.makeText(this,"Data saved",Toast.LENGTH_SHORT).show();
+    }
+    public void loadDataStart(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        timeStart1 = sharedPreferences.getString(TIME_START,"");
+    }
+    public void updateStart(){
+        editTextStart.setText(timeStart1);
+    }
+    public void loadDataEnd(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        timeEnd1 = sharedPreferences.getString(TIME_END,"");
+    }
+    public void updateEnd(){
+        editTextEnd.setText(timeEnd1);
+    }
+
 }

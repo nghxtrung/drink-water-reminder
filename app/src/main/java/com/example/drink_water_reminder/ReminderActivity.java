@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -43,6 +44,18 @@ public class ReminderActivity extends AppCompatActivity {
     TextView timeEvery;
     TextView timeStartEnd;
 
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static  final String INTERVAL = "interval";
+    public static  final String TIME_START = "timestart";
+    public static  final String TIME_END = "timeend";
+    public static  final String STATUS = "status";
+
+    private  String textInterval;
+    public   String timeStart;
+    public  String timeEnd;
+    public  boolean statusNoti = true;
+    public  boolean statusAfter  ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +68,15 @@ public class ReminderActivity extends AppCompatActivity {
     ImageView buttonOffNote = findViewById(R.id.buttonOffnoti);
     ImageView buttonNoti = findViewById(R.id.buttonNoti);
     LinearLayout linearLayoutContent = findViewById(R.id.content);
+
     buttonOffNote.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
            textViewTitle.setText("Reminder is turned off");
            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#EE5C49"));
            linearLayoutContent.setVisibility(View.GONE);
+           statusNoti = false;
+           saveDataStatus();
         }
     });
 
@@ -71,9 +87,23 @@ public class ReminderActivity extends AppCompatActivity {
             textViewTitle.setText("Auto Reminders");
             relativeLayoutNoti.setBackgroundColor(Color.parseColor("#51d06d"));
             linearLayoutContent.setVisibility(View.VISIBLE);
+            statusNoti = true;
+            saveDataStatus();
         }
     });
-
+        loadData();
+        updateViews();
+        if(statusNoti == true){
+            textViewTitle.setText("Auto Reminders");
+            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#51d06d"));
+            linearLayoutContent.setVisibility(View.VISIBLE);
+            Toast.makeText(this,"True",Toast.LENGTH_SHORT).show();
+        } else{
+            textViewTitle.setText("Reminder is turned off");
+            relativeLayoutNoti.setBackgroundColor(Color.parseColor("#EE5C49"));
+            linearLayoutContent.setVisibility(View.GONE);
+            Toast.makeText(this,"False",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void showPopup(View v) {
@@ -116,7 +146,8 @@ public class ReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (validateIntervalTime(intervalTimeEditText).equals("")) {
-                    timeEvery.setText("Every " + intervalTimeEditText.getText().toString() + " minutes");
+                    timeEvery.setText("every "+intervalTimeEditText.getText()+" minustes");
+                    saveDataInterval();
                 } else {
                     String error = validateIntervalTime(intervalTimeEditText);
                     showIntervalAlert(false, error);
@@ -150,6 +181,34 @@ public class ReminderActivity extends AppCompatActivity {
         } catch (NumberFormatException e) {
             return "Bắt buộc nhập số";
         }
+    }
+
+    public void saveDataInterval(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sharedPreferences.edit();
+        editor.putString(INTERVAL,timeEvery.getText().toString());
+
+        editor.commit();
+        Toast.makeText(this,"Data saved",Toast.LENGTH_SHORT).show();
+    }
+    public void saveDataStatus(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sharedPreferences.edit();
+        editor.putBoolean(STATUS,statusNoti);
+        editor.commit();
+        Toast.makeText(this,"Data saved",Toast.LENGTH_SHORT).show();
+    }
+    public  void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        textInterval = sharedPreferences.getString(INTERVAL,"");
+        timeStart = sharedPreferences.getString(TIME_START,"");
+        timeEnd = sharedPreferences.getString(TIME_END,"");
+        statusAfter =  sharedPreferences.getBoolean(STATUS,false);
+    }
+    public void updateViews(){
+        timeEvery.setText(textInterval);
+        timeStartEnd.setText(timeStart + "-" + timeEnd);
+        statusNoti = statusAfter;
     }
 }
 
