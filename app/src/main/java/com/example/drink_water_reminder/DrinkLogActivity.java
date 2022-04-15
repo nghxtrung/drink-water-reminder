@@ -15,46 +15,70 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DrinkLogActivity extends AppCompatActivity {
+    Connection connection;
+
     ListView listViewDrinkLog;
-    String date[] = {"09-04-2022", "10-04-2022", "11-04-2022"};
-    List<DrinkLog> drinkLogList = new ArrayList<DrinkLog>();
+    List<DrinkDate> drinkDateList = new ArrayList<DrinkDate>();
+    List<DrinkLog> drinkLogList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drink_log);
 
-        drinkLogList.add(new DrinkLog(R.drawable.water, 300, "12:00"));
-        drinkLogList.add(new DrinkLog(R.drawable.water, 400, "12:00"));
-        drinkLogList.add(new DrinkLog(R.drawable.water, 500, "12:00"));
+        DrinkDatabase drinkDatabase = new DrinkDatabase();
+        connection = drinkDatabase.ConnectDatabase();
+
+        if (connection != null) {
+            String sqlStatement = "select * from ThoiGian";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                while (set.next()) {
+                    String code = set.getString("MaThoiGian");
+                    String date = set.getString("Ngay");
+                    int target = set.getInt("MucTieu");
+                    drinkDateList.add(new DrinkDate(code, date, target));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        Collections.sort(drinkDateList);
 
         listViewDrinkLog = findViewById(R.id.listViewDrinkLog);
-        DrinkLogAdapter drinkLogAdapter = new DrinkLogAdapter(this, date, drinkLogList);
+        DrinkLogAdapter drinkLogAdapter = new DrinkLogAdapter(this, drinkDateList);
         listViewDrinkLog.setAdapter(drinkLogAdapter);
     }
 
     class DrinkLogAdapter extends BaseAdapter {
         Activity activity;
-        String date[];
+        List<DrinkDate> drinkDateList;
         List<DrinkLog> drinkLogList;
         LayoutInflater inflater;
 
-        public DrinkLogAdapter(Activity activity, String[] date, List<DrinkLog> drinkLogList) {
+        public DrinkLogAdapter(Activity activity, List<DrinkDate> drinkDateList) {
             this.activity = activity;
-            this.date = date;
-            this.drinkLogList = drinkLogList;
+            this.drinkDateList = drinkDateList;
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public int getCount() {
-            return date.length;
+            return drinkDateList.size();
         }
 
         @Override
@@ -75,7 +99,36 @@ public class DrinkLogActivity extends AppCompatActivity {
                 TextView drinkLogDateTextView = v.findViewById(R.id.drinkLogDateTextView);
                 ListView drinkLogItemListView = v.findViewById(R.id.drinkLogItemListView);
 
-                drinkLogDateTextView.setText(date[i]);
+                drinkLogDateTextView.setText(drinkDateList.get(i).getDate());
+                ProgressBar drinkLogDateProgressBar = v.findViewById(R.id.drinkLogDateProgressBar);
+
+                drinkLogList = new ArrayList<DrinkLog>();
+                if (connection != null) {
+                    String sqlStatement = "select * from ChiTietThoiGian where MaThoiGian = '" + drinkDateList.get(i).getCode() + "'";
+                    Statement statement = null;
+                    try {
+                        statement = connection.createStatement();
+                        ResultSet set = statement.executeQuery(sqlStatement);
+                        while (set.next()) {
+                            String codeTime = set.getString("MaChiTietTG");
+                            String time = set.getString("Gio");
+                            int volume = set.getInt("LuongNuoc");
+                            String dateCode = set.getString("MaThoiGian");
+                            int image = set.getInt("Anh");
+                            drinkLogList.add(new DrinkLog(codeTime, time, volume, dateCode, image));
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+
+                int sumOfVolume = 0;
+                for (int j = 0; j < drinkLogList.size(); j++) {
+                    sumOfVolume += drinkLogList.get(j).getVolume();
+                }
+                int percentVolume = Math.round(((float) sumOfVolume/drinkDateList.get(i).getTarget()) * 100);
+                drinkLogDateProgressBar.setProgress(percentVolume);
+
                 DrinkLogItemAdapter drinkLogItemAdapter = new DrinkLogItemAdapter(activity, drinkLogList);
                 drinkLogItemListView.setAdapter(drinkLogItemAdapter);
                 drinkLogItemListView.getLayoutParams().height = caculateHeight(drinkLogItemListView, drinkLogList.size() * 55);
@@ -128,7 +181,7 @@ public class DrinkLogActivity extends AppCompatActivity {
 
                 drinkLogItemImageView.setImageResource(drinkLogList.get(i).getImage());
                 drinkLogItemVolumeTextView.setText(drinkLogList.get(i).getVolume() + " ml");
-                drinkLogItemTimeTextView.setText("12:00");
+                drinkLogItemTimeTextView.setText(drinkLogList.get(i).getTime());
             }
             return v;
         }

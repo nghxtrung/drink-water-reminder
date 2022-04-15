@@ -4,13 +4,33 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class DrinkAlarm implements Comparable<DrinkAlarm> {
-    private int image;
-    private int volume;
+    private String timeCode;
     private String time;
+    private int volume;
+    private String dateCode;
+    private int image;
 
-    public DrinkAlarm(int image, int volume, String time) {
+    public DrinkAlarm(String timeCode, String time, int volume, String dateCode, int image) {
+        this.timeCode = timeCode;
+        this.time = time;
         this.image = image;
         this.volume = volume;
+        this.dateCode = dateCode;
+    }
+
+    public String getTimeCode() {
+        return timeCode;
+    }
+
+    public void setTimeCode(String timeCode) {
+        this.timeCode = timeCode;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -30,12 +50,12 @@ public class DrinkAlarm implements Comparable<DrinkAlarm> {
         this.volume = volume;
     }
 
-    public String getTime() {
-        return time;
+    public String getDateCode() {
+        return dateCode;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDateCode(String dateCode) {
+        this.dateCode = dateCode;
     }
 
     @Override

@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
@@ -21,10 +23,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +44,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,11 +58,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    Connection connection;
+
+    List<DrinkAlarm> drinkAlarmList;
+
     DrinkAdapter drinkAdapter;
     GridView drinkGridView;
     TextView drinkTargetTextView;
     ProgressBar drinkProgressBar;
     int sumOfVolume = 0;
+    int drinkTarget = 0;
     int yearDrink, monthDrink, dayDrink;
     int hourDrinkDetail, minuteDrinkDetail;
     ImageView drinkNowImageView;
@@ -89,6 +102,103 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.cancel(wrnPendingIntent);
     }
 
+    public String caculateTime(String time, int interval) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, interval);
+        String newTime = simpleDateFormat.format(calendar.getTime());
+        return newTime;
+    }
+
+    public List<DrinkAlarmTest> generateListTime(String timeStart, String timeEnd, int interval) {
+        List<DrinkAlarmTest> drinkAlarmTestList = new ArrayList<DrinkAlarmTest>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        int i = 1;
+        String nextTime = caculateTime(timeStart, interval);
+        boolean check = true;
+        while (check) {
+            int value = 0;
+            try {
+                value = simpleDateFormat.parse(nextTime).compareTo(simpleDateFormat.parse(timeEnd));
+                if (value <= -1 || value == 0) {
+                    drinkAlarmTestList.add(new DrinkAlarmTest(i, nextTime));
+                    nextTime = caculateTime(nextTime, interval);
+                    i++;
+                }
+                else
+                    check = false;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return drinkAlarmTestList;
+    }
+
+    public String getDateNow() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dateNowString = dateFormat.format(dateNow);
+        return dateNowString;
+    }
+
+    public String getTimeNow() {
+        Date dateNow = new Date();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        String timeNowString = timeFormat.format(dateNow);
+        return timeNowString;
+    }
+
+    public String generateDateCode() {
+        int count = 0;
+        DrinkDatabase drinkDatabase = new DrinkDatabase();
+        connection = drinkDatabase.ConnectDatabase();
+        int maxNumber = 1;
+        if (connection != null) {
+            String sqlStatement = "select top(1) MaThoiGian from ThoiGian order by MaThoiGian desc";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                if (set.next()) {
+                    String maxCode = set.getString("MaThoiGian");
+                    maxNumber = Integer.parseInt(maxCode.substring(2)) + 1;
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return "TG" + maxNumber;
+    }
+
+    public String generateTimeCode() {
+        int count = 0;
+        DrinkDatabase drinkDatabase = new DrinkDatabase();
+        connection = drinkDatabase.ConnectDatabase();
+        int maxNumber = 1;
+        if (connection != null) {
+            String sqlStatement = "select top(1) MaChiTietTG from ChiTietThoiGian order by MaChiTietTG desc";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                if (set.next()) {
+                    String maxCode = set.getString("MaChiTietTG");
+                    maxNumber = Integer.parseInt(maxCode.substring(4)) + 1;
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return "CTTG" + maxNumber;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,18 +210,15 @@ public class MainActivity extends AppCompatActivity {
             manager.createNotificationChannel(channel);
         }
 
-        Date dateNow = new Date();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String timNowString = timeFormat.format(dateNow);
-        List<DrinkAlarmTest> drinkAlarmTestList = new ArrayList<DrinkAlarmTest>();
-        drinkAlarmTestList.add(new DrinkAlarmTest(1, "22:01"));
-        drinkAlarmTestList.add(new DrinkAlarmTest(2, "22:02"));
-        drinkAlarmTestList.add(new DrinkAlarmTest(3, "22:03"));
+        String timeNowString = getTimeNow();
+
+        List<DrinkAlarmTest> drinkAlarmTestList = generateListTime(TestDB.timeStart, TestDB.timeEnd, TestDB.interval);
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         int value = 0;
         try {
             for (DrinkAlarmTest drinkAlarmTest : drinkAlarmTestList) {
-                value = simpleDateFormat.parse(drinkAlarmTest.getTime()).compareTo(simpleDateFormat.parse(timNowString));
+                value = simpleDateFormat.parse(drinkAlarmTest.getTime()).compareTo(simpleDateFormat.parse(timeNowString));
                 if (value >= 1)
                     setWaterReminderNotification(drinkAlarmTest.getId(), drinkAlarmTest.getTime());
                 else
@@ -121,19 +228,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Done")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(MainActivity.this,"Get Started!",Toast.LENGTH_LONG).show();
-                        dialogInterface.dismiss();
-                    }
-                });
-        LayoutInflater inflater = getLayoutInflater();
-        View welcomeAlertView = inflater.inflate(R.layout.alert_welcome, null);
-        builder.setView(welcomeAlertView);
-        builder.show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+//                .setTitle("Done")
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        Toast.makeText(MainActivity.this,"Get Started!",Toast.LENGTH_LONG).show();
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+//        LayoutInflater inflater = getLayoutInflater();
+//        View welcomeAlertView = inflater.inflate(R.layout.alert_welcome, null);
+//        builder.setView(welcomeAlertView);
+//        builder.show();
 
         Toolbar mainToolBar = findViewById(R.id.mainToolbar);
         setSupportActionBar(mainToolBar);
@@ -148,11 +255,53 @@ public class MainActivity extends AppCompatActivity {
         });
         mainToolBar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_calendar));
 
-        List<DrinkAlarm> drinkAlarmList = TestDatabase.getData();
+        String dateNowString = getDateNow();
+
+        drinkAlarmList = new ArrayList<DrinkAlarm>();
+        DrinkDatabase drinkDatabase = new DrinkDatabase();
+        connection = drinkDatabase.ConnectDatabase();
+        if (connection != null) {
+            String sqlStatement = "select * from ThoiGian inner join ChiTietThoiGian on ThoiGian.MaThoiGian = ChiTietThoiGian.MaThoiGian where Ngay = '" + dateNowString +"'";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                while (set.next()) {
+                    String codeTime = set.getString("MaChiTietTG");
+                    String time = set.getString("Gio");
+                    int volume = set.getInt("LuongNuoc");
+                    String dateCode = set.getString("MaThoiGian");
+                    int image = set.getInt("Anh");
+                    DrinkAlarm drinkAlarm = new DrinkAlarm(codeTime, time, volume, dateCode, image);
+                    drinkAlarmList.add(drinkAlarm);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+//        drinkAlarmList.add(new DrinkAlarm("0", "14:00", 0, "0", R.drawable.ic_bell_color));
+
 
         drinkProgressBar = findViewById(R.id.drinkTargetProgressBar);
         drinkTargetTextView = findViewById(R.id.drinkTargetTextView);
-        setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList);
+        if (connection != null) {
+            String sqlStatement = "select MucTieu from ThoiGian where Ngay = '" + dateNowString + "'";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                if (!set.next()) {
+                    setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, 2000);
+                    String sqlInsert = "insert into ThoiGian (MaThoiGian, Ngay, MucTieu) values ('" + generateDateCode() + "', '" + dateNowString + "', 2000)";
+                    statement.executeUpdate(sqlInsert);
+                } else {
+                    drinkTarget = set.getInt("MucTieu");
+                    setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, drinkTarget);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
         findViewById(R.id.drinkTargetGroup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         drinkGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position < drinkAlarmList.size() - 1)
+//                if (position < drinkAlarmList.size() - 1)
                     showDrinkDetailAlert(drinkAlarmList, position, true, "", "");
             }
         });
@@ -176,11 +325,36 @@ public class MainActivity extends AppCompatActivity {
         addImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drinkAlarmList.add(new DrinkAlarm(TestDB.image, TestDB.volume, "13:30"));
-                Collections.sort(drinkAlarmList);
-                drinkAdapter = new DrinkAdapter(MainActivity.this, drinkAlarmList);
-                drinkGridView.setAdapter(drinkAdapter);
-                setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList);
+                if (connection != null) {
+                    String sqlStatement = "select MaThoiGian, MucTieu from ThoiGian where Ngay = '" + dateNowString + "'";
+                    Statement statement = null;
+                    try {
+                        statement = connection.createStatement();
+                        ResultSet set = statement.executeQuery(sqlStatement);
+                        String dateCode;
+                        String timeCode = generateTimeCode();
+                        if (!set.next()) {
+                            dateCode = generateDateCode();
+                            setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, 2000);
+                            String sqlInsertDate = "insert into ThoiGian (MaThoiGian, Ngay, MucTieu) values ('" + dateCode + "', '" + dateNowString + "', 2000)";
+                            statement.executeUpdate(sqlInsertDate);
+                            String sqlInsertTime = "insert into ChiTietThoiGian (MaChiTietTG, Gio, LuongNuoc, MaThoiGian, Anh) values ('" + timeCode + "', '" + getTimeNow() + "', " + TestDB.volume + ", '" + dateCode + "', " + TestDB.image + ")";
+                            statement.executeUpdate(sqlInsertTime);
+                        } else {
+                            dateCode = set.getString("MaThoiGian");
+                            String sqlInsertTime = "insert into ChiTietThoiGian (MaChiTietTG, Gio, LuongNuoc, MaThoiGian, Anh) values ('" + timeCode + "', '" + getTimeNow() + "', " + TestDB.volume + ", '" + dateCode + "', " + TestDB.image + ")";
+                            Toast.makeText(MainActivity.this, sqlInsertTime, Toast.LENGTH_SHORT).show();
+                            statement.executeUpdate(sqlInsertTime);
+                        }
+                        drinkAlarmList.add(new DrinkAlarm(timeCode, getTimeNow(), TestDB.volume, dateCode, TestDB.image));
+                        Collections.sort(drinkAlarmList);
+                        drinkAdapter = new DrinkAdapter(MainActivity.this, drinkAlarmList);
+                        drinkGridView.setAdapter(drinkAdapter);
+                        setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, drinkTarget);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -200,14 +374,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setDrinkTarget(TextView drinkTargetTextView, ProgressBar drinkProgressBar, List<DrinkAlarm> drinkAlarmList) {
+    private void setDrinkTarget(TextView drinkTargetTextView, ProgressBar drinkProgressBar, List<DrinkAlarm> drinkAlarmList, int drinkTarget) {
         sumOfVolume = 0;
         for (int i = 0; i < drinkAlarmList.size() - 1; i++) {
             sumOfVolume += drinkAlarmList.get(i).getVolume();
         }
-        int percentVolume = Math.round(((float) sumOfVolume/2145) * 100);
+        int percentVolume = Math.round(((float) sumOfVolume/drinkTarget) * 100);
         drinkProgressBar.setProgress(percentVolume);
-        drinkTargetTextView.setText(sumOfVolume + "/" + "2145ml");
+        drinkTargetTextView.setText(sumOfVolume + "/" + drinkTarget + "ml");
     }
 
     private void showDrinkTargetAlert(TextView drinkTargetTextView, ProgressBar drinkProgressBar, int sumOfVolume, boolean checkError, String error) {
@@ -219,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
             drinkTargetEditText.setError(error);
             drinkTargetEditText.requestFocus();
         }
+        drinkTargetEditText.setText(drinkTarget + "");
         builder.setView(drinkTargetAlertView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -228,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
                     int volume = Integer.parseInt(drinkTargetEditText.getText().toString());
                     int percentVolume = Math.round(((float) sumOfVolume/volume) * 100);
                     drinkProgressBar.setProgress(percentVolume);
+                    drinkTarget = volume;
                 } else {
                     String error = validateTargetVolume(drinkTargetEditText);
                     showDrinkTargetAlert(drinkTargetTextView, drinkProgressBar, sumOfVolume, false, error);
@@ -263,6 +439,18 @@ public class MainActivity extends AppCompatActivity {
                 if (validateVolume(drinkVolumeEditText).equals("")) {
                     String time = drinkTimeDetailTextView.getText().toString();
                     int volume = Integer.parseInt(drinkVolumeEditText.getText().toString());
+
+                    if (connection != null) {
+                        String sqlUpdate = "update ChiTietThoiGian set gio = '" + time + "', LuongNuoc = " + volume + " where MaChiTietTG = '" + drinkAlarmList.get(position).getTimeCode() + "'";
+                        Statement statement = null;
+                        try {
+                            statement = connection.createStatement();
+                            statement.executeUpdate(sqlUpdate);
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    }
+
                     drinkAlarmList.get(position).setTime(time);
                     drinkAlarmList.get(position).setVolume(volume);
                     Collections.sort(drinkAlarmList);
@@ -278,7 +466,6 @@ public class MainActivity extends AppCompatActivity {
         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
             }
         });
         AlertDialog alertDialog = builder.create();
@@ -290,11 +477,24 @@ public class MainActivity extends AppCompatActivity {
                 int image = drinkAlarmList.get(position).getImage();
                 String time = drinkAlarmList.get(position).getTime();
                 int volume = drinkAlarmList.get(position).getVolume();
-                drinkAlarmList.add(new DrinkAlarm(image, volume, time));
+                String dateCode = drinkAlarmList.get(position).getDateCode();
+
+                if (connection != null) {
+                    String sqlInsert = "insert into ChiTietThoiGian (MaChiTietTG, Gio, LuongNuoc, MaThoiGian, Anh) values ('" + generateTimeCode() + "', '" + time + "', " + volume + ", '" + dateCode + "', " + image + ")";
+                    Statement statement = null;
+                    try {
+                        statement = connection.createStatement();
+                        statement.executeUpdate(sqlInsert);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+
+                drinkAlarmList.add(new DrinkAlarm(generateTimeCode(), time, volume, dateCode, image));
                 Collections.sort(drinkAlarmList);
                 drinkAdapter = new DrinkAdapter(MainActivity.this, drinkAlarmList);
                 drinkGridView.setAdapter(drinkAdapter);
-                setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList);
+                setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, drinkTarget);
                 alertDialog.dismiss();
             }
         });
@@ -302,11 +502,23 @@ public class MainActivity extends AppCompatActivity {
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String timeCode = drinkAlarmList.get(position).getTimeCode();
+                if (connection != null) {
+                    String sqlDelete = "delete from ChiTietThoiGian where MaChiTietTG = '" + timeCode + "'";
+                    Statement statement = null;
+                    try {
+                        statement = connection.createStatement();
+                        statement.executeUpdate(sqlDelete);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+
                 drinkAlarmList.remove(position);
                 Collections.sort(drinkAlarmList);
                 drinkAdapter = new DrinkAdapter(MainActivity.this, drinkAlarmList);
                 drinkGridView.setAdapter(drinkAdapter);
-                setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList);
+                setDrinkTarget(drinkTargetTextView, drinkProgressBar, drinkAlarmList, drinkTarget);
                 alertDialog.dismiss();
             }
         });
@@ -521,6 +733,8 @@ public class MainActivity extends AppCompatActivity {
                         yearDrink = selectedYear;
                         monthDrink = selectedMonth + 1;
                         dayDrink = selectedDay;
+                        String day = dayDrink < 10 ? "0" + dayDrink : dayDrink + "";
+                        String month = monthDrink < 10 ? "0" + monthDrink : monthDrink + "";
                         if (dayDrink == calendar.get(Calendar.DAY_OF_MONTH) &&
                             monthDrink == (calendar.get(Calendar.MONTH) + 1) &&
                             yearDrink == calendar.get(Calendar.YEAR))
@@ -530,8 +744,10 @@ public class MainActivity extends AppCompatActivity {
                                 yearDrink == calendar.get(Calendar.YEAR))
                             getSupportActionBar().setTitle("Yesterday");
                         else {
-                            getSupportActionBar().setTitle(dayDrink + "/" + monthDrink + "/" + yearDrink);
+                            getSupportActionBar().setTitle(day + "/" + month + "/" + yearDrink);
                         }
+                        String customDateSelected = day + "/" + month + "/" + yearDrink;
+                        getDrinkList(customDateSelected);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -543,6 +759,33 @@ public class MainActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    public void getDrinkList(String date) {
+        drinkAlarmList = new ArrayList<DrinkAlarm>();
+        if (connection != null) {
+            String sqlStatement = "select * from ThoiGian inner join ChiTietThoiGian on ThoiGian.MaThoiGian = ChiTietThoiGian.MaThoiGian where Ngay = '" + date +"'";
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(sqlStatement);
+                while (set.next()) {
+                    String codeTime = set.getString("MaChiTietTG");
+                    String time = set.getString("Gio");
+                    int volume = set.getInt("LuongNuoc");
+                    String dateCode = set.getString("MaThoiGian");
+                    int image = set.getInt("Anh");
+                    DrinkAlarm drinkAlarm = new DrinkAlarm(codeTime, time, volume, dateCode, image);
+                    drinkAlarmList.add(drinkAlarm);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        drinkGridView = findViewById(R.id.drinkGridView);
+        Collections.sort(drinkAlarmList);
+        drinkAdapter = new DrinkAdapter(this, drinkAlarmList);
+        drinkGridView.setAdapter(drinkAdapter);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -551,10 +794,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.today:
-                getSupportActionBar().setTitle("Menu");
+                getSupportActionBar().setTitle("Drink Water Reminder");
+                getDrinkList(getDateNow());
                 return true;
             case R.id.yesterday:
                 getSupportActionBar().setTitle("Yesterday");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, -1);
+                calendar.getTime();
+                String yesterdayString = simpleDateFormat.format(calendar.getTime());
+                getDrinkList(yesterdayString);
                 return true;
             case R.id.customDate:
                 showDrinkDateAlert();
