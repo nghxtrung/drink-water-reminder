@@ -5,6 +5,6 @@ public class TestDB {
     public static int image = R.drawable.ic_bottle_1;
     public static int volume = 300;
     public static int interval = 1;
-    public static String timeStart = "06:39";
-    public static String timeEnd = "06:42";
+    public static String timeStart = "09:20";
+    public static String timeEnd = "23:45";
 }

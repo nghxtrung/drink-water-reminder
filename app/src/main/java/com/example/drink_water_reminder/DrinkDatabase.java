@@ -11,7 +11,7 @@ public class DrinkDatabase {
     Connection connection = null;
 
     public Connection ConnectDatabase() {
-        String ip = "192.168.1.4", port = "1433", db = "NhacNhoUongNuoc", username = "mylogin", password = "1234";
+        String ip = "172.20.10.5", port = "1433", db = "NhacNhoUongNuoc", username = "mylogin", password = "1234";
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         String connectURL = null;

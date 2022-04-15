@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     DrinkItemAddAdapter drinkItemAddAdapter;
     List<DrinkNow> drinkNowList;
 
+    String dateCurrent;
+
     public void setWaterReminderNotification(int idWaterReminderNotification, String drinkTimeString) {
         Intent wrnIntent = new Intent(MainActivity.this, WaterReminderNotificationReceiver.class);
         PendingIntent wrnPendingIntent = PendingIntent.getBroadcast(MainActivity.this, idWaterReminderNotification, wrnIntent, PendingIntent.FLAG_MUTABLE);
@@ -196,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 throwables.printStackTrace();
             }
         }
+        Log.e("Kết quả", maxNumber + "");
         return "CTTG" + maxNumber;
     }
 
@@ -203,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dateCurrent = getDateNow();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("waterReminder", "Water Reminder Channel", NotificationManager.IMPORTANCE_HIGH);
@@ -228,19 +233,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-//                .setTitle("Done")
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        Toast.makeText(MainActivity.this,"Get Started!",Toast.LENGTH_LONG).show();
-//                        dialogInterface.dismiss();
-//                    }
-//                });
-//        LayoutInflater inflater = getLayoutInflater();
-//        View welcomeAlertView = inflater.inflate(R.layout.alert_welcome, null);
-//        builder.setView(welcomeAlertView);
-//        builder.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Done")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(MainActivity.this,"Get Started!",Toast.LENGTH_LONG).show();
+                        dialogInterface.dismiss();
+                    }
+                });
+        LayoutInflater inflater = getLayoutInflater();
+        View welcomeAlertView = inflater.inflate(R.layout.alert_welcome, null);
+        builder.setView(welcomeAlertView);
+        builder.show();
 
         Toolbar mainToolBar = findViewById(R.id.mainToolbar);
         setSupportActionBar(mainToolBar);
@@ -285,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         drinkProgressBar = findViewById(R.id.drinkTargetProgressBar);
         drinkTargetTextView = findViewById(R.id.drinkTargetTextView);
         if (connection != null) {
-            String sqlStatement = "select MucTieu from ThoiGian where Ngay = '" + dateNowString + "'";
+            String sqlStatement = "select MucTieu from ThoiGian where Ngay = '" + dateCurrent + "'";
             Statement statement = null;
             try {
                 statement = connection.createStatement();
@@ -326,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (connection != null) {
-                    String sqlStatement = "select MaThoiGian, MucTieu from ThoiGian where Ngay = '" + dateNowString + "'";
+                    String sqlStatement = "select MaThoiGian, MucTieu from ThoiGian where Ngay = '" + dateCurrent + "'";
                     Statement statement = null;
                     try {
                         statement = connection.createStatement();
@@ -343,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             dateCode = set.getString("MaThoiGian");
                             String sqlInsertTime = "insert into ChiTietThoiGian (MaChiTietTG, Gio, LuongNuoc, MaThoiGian, Anh) values ('" + timeCode + "', '" + getTimeNow() + "', " + TestDB.volume + ", '" + dateCode + "', " + TestDB.image + ")";
-                            Toast.makeText(MainActivity.this, sqlInsertTime, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MainActivity.this, generateTimeCode(), Toast.LENGTH_SHORT).show();
                             statement.executeUpdate(sqlInsertTime);
                         }
                         drinkAlarmList.add(new DrinkAlarm(timeCode, getTimeNow(), TestDB.volume, dateCode, TestDB.image));
@@ -404,6 +409,18 @@ public class MainActivity extends AppCompatActivity {
                     int percentVolume = Math.round(((float) sumOfVolume/volume) * 100);
                     drinkProgressBar.setProgress(percentVolume);
                     drinkTarget = volume;
+
+                    if (connection != null) {
+                        String sqlUpdate = "update ThoiGian set MucTieu = " + volume + " where Ngay = '" + dateCurrent + "'";
+                        Statement statement = null;
+                        try {
+                            statement = connection.createStatement();
+                            statement.executeUpdate(sqlUpdate);
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    }
+
                 } else {
                     String error = validateTargetVolume(drinkTargetEditText);
                     showDrinkTargetAlert(drinkTargetTextView, drinkProgressBar, sumOfVolume, false, error);
@@ -747,6 +764,7 @@ public class MainActivity extends AppCompatActivity {
                             getSupportActionBar().setTitle(day + "/" + month + "/" + yearDrink);
                         }
                         String customDateSelected = day + "/" + month + "/" + yearDrink;
+                        dateCurrent = customDateSelected;
                         getDrinkList(customDateSelected);
                     }
                 } catch (ParseException e) {
@@ -795,6 +813,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.today:
                 getSupportActionBar().setTitle("Drink Water Reminder");
+                dateCurrent = getDateNow();
                 getDrinkList(getDateNow());
                 return true;
             case R.id.yesterday:
@@ -804,6 +823,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.add(Calendar.DATE, -1);
                 calendar.getTime();
                 String yesterdayString = simpleDateFormat.format(calendar.getTime());
+                dateCurrent = yesterdayString;
                 getDrinkList(yesterdayString);
                 return true;
             case R.id.customDate:

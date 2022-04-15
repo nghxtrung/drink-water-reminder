@@ -97,6 +97,7 @@ public class DrinkLogActivity extends AppCompatActivity {
             if (v == null) {
                 v = inflater.inflate(R.layout.listview_drinklog, null);
                 TextView drinkLogDateTextView = v.findViewById(R.id.drinkLogDateTextView);
+                TextView drinkLogSumTextView = v.findViewById(R.id.drinkLogSumTextView);
                 ListView drinkLogItemListView = v.findViewById(R.id.drinkLogItemListView);
 
                 drinkLogDateTextView.setText(drinkDateList.get(i).getDate());
@@ -128,6 +129,8 @@ public class DrinkLogActivity extends AppCompatActivity {
                 }
                 int percentVolume = Math.round(((float) sumOfVolume/drinkDateList.get(i).getTarget()) * 100);
                 drinkLogDateProgressBar.setProgress(percentVolume);
+
+                drinkLogSumTextView.setText(sumOfVolume + " ml");
 
                 DrinkLogItemAdapter drinkLogItemAdapter = new DrinkLogItemAdapter(activity, drinkLogList);
                 drinkLogItemListView.setAdapter(drinkLogItemAdapter);

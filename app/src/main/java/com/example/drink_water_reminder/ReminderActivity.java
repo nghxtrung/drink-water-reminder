@@ -166,8 +166,8 @@ public class ReminderActivity extends AppCompatActivity {
             else {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 try {
-                    Date dateStart = simpleDateFormat.parse(TestDB.timeStart);
-                    Date dateEnd = simpleDateFormat.parse(TestDB.timeEnd);
+                    Date dateStart = simpleDateFormat.parse(timeStart);
+                    Date dateEnd = simpleDateFormat.parse(timeEnd);
                     long diffMs = dateEnd.getTime() - dateStart.getTime();
                     long diffSec = diffMs / 1000;
                     long min = diffSec / 60;
